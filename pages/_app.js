@@ -1,5 +1,8 @@
 import App from 'next/app';
 import normalizeStyles from 'normalize.css?type=global';
+import Head from 'next/head';
+
+import Header from '../components/Header';
 
 class MyApp extends App {
   render() {
@@ -7,9 +10,70 @@ class MyApp extends App {
 
     return (
       <>
+        <Head>
+          <link
+            href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,700&display=swap"
+            rel="stylesheet"
+          />
+        </Head>
+
         <style jsx global>
           {normalizeStyles}
         </style>
+        <style jsx global>{`
+          /** Additional common normalizations */
+          *,
+          *::before,
+          *::after {
+            box-sizing: border-box;
+          }
+          html {
+            font-size: 62.5%; /* Set root font-size to 10px so we can more easily use 'rem's everywhere */
+          }
+          body {
+            min-width: 32rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
+        `}</style>
+        <style jsx global>{`
+          /** Theme colors */
+          :root {
+            --white: #ffffff;
+            --pale-grey: #f0f4f8;
+            --light-sky-blue: #d9e2ec;
+            --greyish-blue: #627d98;
+            --metallic-blue: #486581;
+            --dark-grey-blue: #334e68;
+            --dark-sky-blue: #4098d7;
+            --dark-slate-blue: #102a43;
+            --royal: #0b1d96;
+            --light-purple: #a368fc;
+            --brick: #ba2525;
+            --sap-green: #63921a;
+            --seaweed-green: #35b378;
+            --greeny-blue: #3ebd93;
+            --dark-blue-green: #014d40;
+            --dark-sea-green: #0c6b58;
+            --macaroni-and-cheese: #f0b429;
+          }
+
+          /** Theme global styles */
+          body,
+          input,
+          select,
+          button {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.6rem;
+            line-height: 1.1875;
+          }
+
+          body {
+            background-color: var(--pale-grey);
+          }
+        `}</style>
+
+        <Header />
         <Component {...pageProps} />
       </>
     );

@@ -11,7 +11,7 @@ const Home = () => (
 
     <style jsx>{`
       p {
-        margin-top: 50px;
+        margin-top: 5rem;
         text-align: center;
         color: forestgreen;
       }
