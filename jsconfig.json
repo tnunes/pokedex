@@ -1,0 +1,8 @@
+{
+  "exclude": [".next", "out"],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "baseUrl": "."
+  }
+}
