@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 
 import PokemonsGrid from '../components/PokemonsGrid';
 
+import { gteMedium } from '../theme/medias';
+
 const Home = () => {
   const [pokemons, setPokemons] = useState([]);
 
@@ -36,7 +38,13 @@ const Home = () => {
           padding: 4rem 0;
           display: flex;
           flex-direction: column;
-          align-items: center;
+          align-content: center;
+        }
+
+        @media (${gteMedium}) {
+          div {
+            padding: 6rem 0;
+          }
         }
       `}</style>
     </div>

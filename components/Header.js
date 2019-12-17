@@ -1,4 +1,4 @@
-import { gteLarge, ltLarge, gteExtralarge } from '../theme/medias';
+import { gteMedium, ltMedium, gteExtralarge } from '../theme/medias';
 
 import PokeballIcon from './PokeballIcon';
 import SearchInput from './SearchInput';
@@ -53,14 +53,14 @@ const Header = () => (
         color: var(--dark-blue-green);
       }
 
-      @media (${ltLarge}) {
+      @media (${ltMedium}) {
         .pageTitle,
         header :global(.searchInput) {
           display: none;
         }
       }
 
-      @media (${gteLarge}) {
+      @media (${gteMedium}) {
         header {
           --header-border-highlight-height: 0.5rem;
           --header-height: 7.4rem;

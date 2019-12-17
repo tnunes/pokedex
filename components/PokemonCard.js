@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 
+import { gteMedium } from '../theme/medias';
+
 import FavouriteButton from './FavouriteButton';
 
 const PokemonTypes = ({ types = [] }) => {
@@ -36,6 +38,20 @@ const PokemonTypes = ({ types = [] }) => {
           text-transform: uppercase;
           color: var(--white);
           opacity: 0.8;
+        }
+
+        @media (${gteMedium}) {
+          ul {
+            margin: 0 1.8rem;
+          }
+
+          li {
+            width: 7.7rem;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+            line-height: 1.2;
+            letter-spacing: 0.02rem;
+          }
         }
       `}</style>
     </ul>
@@ -145,17 +161,15 @@ const PokemonCard = ({ pokemon }) => {
 
       <style jsx>{`
         article {
-          --image-size: 14rem;
-
           position: relative;
-          width: 14rem;
+          width: var(--card-width);
           display: flex;
           flex-direction: column;
         }
 
         .pokemonPicture {
-          width: var(--image-size);
-          height: var(--image-size);
+          width: var(--card-width);
+          height: var(--card-width);
           padding: 1.5rem;
           border: 0.1rem solid var(--light-sky-blue);
           border-radius: 1.8rem;
@@ -166,6 +180,18 @@ const PokemonCard = ({ pokemon }) => {
           position: absolute;
           top: 1.4rem;
           right: 1.4rem;
+        }
+
+        @media (hover: hover) {
+          :global(.favouriteButton) {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+
+          article:hover > :global(.favouriteButton) {
+            opacity: 1;
+            cursor: pointer;
+          }
         }
 
         .pokemonIdentication {
@@ -189,6 +215,32 @@ const PokemonCard = ({ pokemon }) => {
           font-size: 1.1rem;
           font-style: italic;
           color: var(--greyish-blue);
+        }
+
+        @media (${gteMedium}) {
+          .pokemonPicture {
+            padding: 0;
+          }
+
+          article > :global(.favouriteButton) {
+            top: 1.8rem;
+            right: 1.8rem;
+          }
+
+          .pokemonIdentication {
+            margin: 0 1.8rem;
+          }
+
+          .pokemonName {
+            margin-bottom: 0.9rem;
+            font-size: 2.1rem;
+            line-height: 1.1905;
+          }
+
+          .pokemonNumber {
+            margin-top: 1.5rem;
+            font-size: 1.6rem;
+          }
         }
       `}</style>
     </article>

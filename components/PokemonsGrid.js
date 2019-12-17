@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 
+import { gteMedium } from '../theme/medias';
+
 import PokemonCard from './PokemonCard';
 
 const PokemonsGrid = ({ pokemons }) => {
@@ -12,16 +14,33 @@ const PokemonsGrid = ({ pokemons }) => {
       ))}
 
       <style jsx>{`
+        :global(:root) {
+          --card-width: 14rem;
+        }
+
         ul {
-          margin: 0;
+          margin: 0 1.5rem;
           padding: 0;
           display: grid;
-          grid-template-columns: 14rem 14rem;
+          grid-template-columns: repeat(2, var(--card-width));
           grid-gap: 2.5rem 1rem;
+          justify-content: center;
         }
 
         li {
           list-style-type: none;
+        }
+
+        @media (${gteMedium}) {
+          :global(:root) {
+            --card-width: 20rem;
+          }
+
+          ul {
+            margin: 0 4rem;
+            grid-gap: 5rem 4rem;
+            grid-template-columns: repeat(3, var(--card-width));
+          }
         }
       `}</style>
     </ul>
