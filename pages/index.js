@@ -2,11 +2,12 @@ import Head from 'next/head';
 
 import usePokemonsListing from '../hooks/usePokemonsListing';
 
-import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import PokemonsGrid from '../components/PokemonsGrid';
 
 import { gteMedium } from '../theme/medias';
+
+const PAGE_SIZE = 20;
 
 const Home = () => {
   const { pokemons, isLoading, error } = usePokemonsListing();
@@ -21,7 +22,12 @@ const Home = () => {
       {error ? (
         <ErrorMessage message={error.message} />
       ) : isLoading || pokemons.length === 0 ? (
-        <LoadingSpinner />
+        <PokemonsGrid
+          skeletonOnly
+          pokemons={Array.from({ length: PAGE_SIZE }, (x, n) => ({
+            name: `skeleton ${n}`
+          }))}
+        />
       ) : (
         <PokemonsGrid pokemons={pokemons} />
       )}

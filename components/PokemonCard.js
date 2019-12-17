@@ -86,10 +86,12 @@ function pokemonImage(pokemonNumber) {
   return `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokemonNumber}.png`;
 }
 
-const PokemonCard = ({ pokemon }) => {
-  const { pokemon: pokemonDetails, isLoading, error } = usePokemonDetails(
-    pokemon.name
-  );
+const PokemonCard = ({ pokemon, skeletonOnly }) => {
+  const {
+    pokemon: pokemonDetails,
+    isLoading,
+    error
+  } = usePokemonDetails(pokemon.name, { doNotFetch: skeletonOnly });
   const [hasImageLoadingError, setHasImageLoadingError] = useState(false);
 
   const { name, id, types } = pokemonDetails || {};
@@ -105,7 +107,7 @@ const PokemonCard = ({ pokemon }) => {
           </div>
           <div className="errorMessage">Could not load details</div>
         </>
-      ) : isLoading || !pokemonDetails ? (
+      ) : isLoading || !pokemonDetails || skeletonOnly ? (
         <CardSkeleton />
       ) : (
         <>
@@ -259,7 +261,8 @@ const PokemonCard = ({ pokemon }) => {
 };
 
 PokemonCard.propTypes = {
-  pokemon: PropTypes.shape({ name: PropTypes.string, url: PropTypes.string })
+  pokemon: PropTypes.shape({ name: PropTypes.string, url: PropTypes.string }),
+  skeletonOnly: PropTypes.bool
 };
 
 export default PokemonCard;

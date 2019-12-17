@@ -4,12 +4,12 @@ import { gteMedium } from '../theme/medias';
 
 import PokemonCard from './PokemonCard';
 
-const PokemonsGrid = ({ pokemons }) => {
+const PokemonsGrid = ({ pokemons, skeletonOnly }) => {
   return (
     <ul>
       {pokemons.map(pokemon => (
         <li key={pokemon.name}>
-          <PokemonCard pokemon={pokemon} />
+          <PokemonCard pokemon={pokemon} skeletonOnly={skeletonOnly} />
         </li>
       ))}
 
@@ -49,7 +49,8 @@ const PokemonsGrid = ({ pokemons }) => {
 PokemonsGrid.propTypes = {
   pokemons: PropTypes.arrayOf(
     PropTypes.shape({ name: PropTypes.string, url: PropTypes.string })
-  )
+  ),
+  skeletonOnly: PropTypes.bool
 };
 
 export default PokemonsGrid;

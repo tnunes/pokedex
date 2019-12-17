@@ -6,7 +6,7 @@ const POKEMON_DETAILS_API_ENDPOINT_PREFIX =
 const INITIAL_STATE = {
   isLoading: false,
   error: null,
-  pokemon: {}
+  pokemon: null
 };
 
 const ACTION_TYPES = {
@@ -28,7 +28,7 @@ function reducer(state, action) {
   }
 }
 
-export default function usePokemonDetails(nameOrId) {
+export default function usePokemonDetails(nameOrId, { doNotFetch = false }) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
   useEffect(() => {
@@ -78,12 +78,14 @@ export default function usePokemonDetails(nameOrId) {
       }
     }
 
-    fetchPokemon(nameOrId);
+    if (!doNotFetch) {
+      fetchPokemon(nameOrId);
+    }
 
     return () => {
       hasUnmounted = true;
     };
-  }, [nameOrId]);
+  }, [doNotFetch, nameOrId]);
 
   return state;
 }
