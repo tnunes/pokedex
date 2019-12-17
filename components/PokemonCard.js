@@ -1,9 +1,14 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { gteMedium } from '../theme/medias';
+import pokemonTypeColor from '../theme/pokemonTypeColor';
+import usePokemonDetails from '../hooks/usePokemonDetails';
 
 import FavouriteButton from './FavouriteButton';
+import CardSkeleton from './CardSkeleton';
+import CardImageSkeleton from './CardImageSkeleton';
+import ImageLoader from './ImageLoader';
 
 const PokemonTypes = ({ types = [] }) => {
   const sortedTypeNames = types
@@ -14,7 +19,7 @@ const PokemonTypes = ({ types = [] }) => {
   return (
     <ul>
       {sortedTypeNames.map(type => (
-        <li key={type} style={{ backgroundColor: typeColor(type) }}>
+        <li key={type} style={{ backgroundColor: pokemonTypeColor(type) }}>
           {type}
         </li>
       ))}
@@ -67,52 +72,6 @@ PokemonTypes.propTypes = {
   )
 };
 
-function typeColor(type) {
-  switch (type) {
-    case 'grass':
-      return 'var(--sap-green)';
-    case 'poison':
-      return 'var(--light-purple)';
-    case 'fire':
-      return 'var(--brick)';
-    case 'water':
-      return 'var(--dark-sky-blue)';
-    case 'flying':
-      return 'var(--royal)';
-    case 'electric':
-      return 'var(--macaroni-and-cheese)';
-    case 'bug':
-      return 'var(--green-leaf)';
-    case 'normal':
-      return 'var(--metallic-blue)';
-    case 'ground':
-      return 'var(--deep-bronze)';
-    case 'fairy':
-      return 'var(--cerise)';
-    case 'fighting':
-      return 'var(--mosque)';
-    case 'psychic':
-      return 'var(--medium-purple)';
-    case 'steel':
-      return 'var(--gray)';
-    case 'ghost':
-      return 'var(--studio)';
-    case 'ice':
-      return 'var(--malibu)';
-    case 'rock':
-      return 'var(--silver-chalice)';
-    case 'dragon':
-      return 'var(--madras)';
-    case 'dark':
-      return 'var(--mine-shaft)';
-    case 'shadow':
-      return 'var(--emperor)';
-    case 'unknown':
-    default:
-      return 'var(--black)';
-  }
-}
-
 function pokemonNumber(pokemonId) {
   let pokemonNumber = `${pokemonId}`;
 
@@ -128,36 +87,51 @@ function pokemonImage(pokemonNumber) {
 }
 
 const PokemonCard = ({ pokemon }) => {
-  const [pokemonDetails, setPokemonDetails] = useState({});
+  const { pokemon: pokemonDetails, isLoading, error } = usePokemonDetails(
+    pokemon.name
+  );
+  const [hasImageLoadingError, setHasImageLoadingError] = useState(false);
 
-  useEffect(() => {
-    async function fetchPokemonDetails(url) {
-      const response = await fetch(url).then(res => res.json());
-
-      console.log(`🐞 Fetched Pokemon details for ${pokemon.name}`, response);
-
-      setPokemonDetails(response);
-    }
-
-    fetchPokemonDetails(pokemon.url);
-  }, [pokemon.name, pokemon.url]);
-
-  const { name, id, types } = pokemonDetails;
+  const { name, id, types } = pokemonDetails || {};
   const number = pokemonNumber(id);
 
   return (
     <article>
-      <img
-        className="pokemonPicture"
-        src={pokemonImage(number)}
-        alt={pokemon.name}
-      />
-      <FavouriteButton className="favouriteButton" />
-      <div className="pokemonIdentication">
-        <h2 className="pokemonName">{name}</h2>
-        <span className="pokemonNumber">#{number}</span>
-      </div>
-      <PokemonTypes types={types} />
+      {error ? (
+        <>
+          <div className="pokemonPictureWrapper loadingError" />
+          <div className="pokemonIdentication">
+            <h2 className="pokemonName">{pokemon.name}</h2>
+          </div>
+          <div className="errorMessage">Could not load details</div>
+        </>
+      ) : isLoading || !pokemonDetails ? (
+        <CardSkeleton />
+      ) : (
+        <>
+          {hasImageLoadingError ? (
+            <div className="pokemonPictureWrapper loadingError" />
+          ) : (
+            <div className="pokemonPictureWrapper">
+              <ImageLoader
+                src={pokemonImage(number)}
+                alt={pokemon.name}
+                skeleton={
+                  <CardImageSkeleton className="pokemonPictureSkeleton" />
+                }
+                onError={() => setHasImageLoadingError(true)}
+                className="pokemonPicture"
+              />
+            </div>
+          )}
+          <FavouriteButton className="favouriteButton" />
+          <div className="pokemonIdentication">
+            <h2 className="pokemonName">{name}</h2>
+            <span className="pokemonNumber">#{number}</span>
+          </div>
+          <PokemonTypes types={types} />
+        </>
+      )}
 
       <style jsx>{`
         article {
@@ -167,13 +141,25 @@ const PokemonCard = ({ pokemon }) => {
           flex-direction: column;
         }
 
-        .pokemonPicture {
+        .pokemonPictureWrapper {
+          position: relative;
           width: var(--card-width);
           height: var(--card-width);
           padding: 1.5rem;
           border: 0.1rem solid var(--light-sky-blue);
           border-radius: 1.8rem;
           background-color: var(--white);
+        }
+
+        .pokemonPictureWrapper > :global(.pokemonPicture) {
+          width: 100%;
+          height: 100%;
+        }
+
+        .pokemonPictureWrapper > :global(.pokemonPictureSkeleton) {
+          position: absolute;
+          top: 0;
+          left: 0;
         }
 
         article > :global(.favouriteButton) {
@@ -217,8 +203,28 @@ const PokemonCard = ({ pokemon }) => {
           color: var(--greyish-blue);
         }
 
+        .loadingError {
+          border-color: var(--brick);
+          opacity: 0.4;
+        }
+
+        .loadingError::before {
+          content: 'X';
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: var(--brick);
+        }
+
+        .errorMessage {
+          margin: 0.1rem 1.2rem 0;
+          font-size: 1.2rem;
+          color: var(--brick);
+        }
+
         @media (${gteMedium}) {
-          .pokemonPicture {
+          .pokemonPictureWrapper {
             padding: 0;
           }
 
@@ -240,6 +246,11 @@ const PokemonCard = ({ pokemon }) => {
           .pokemonNumber {
             margin-top: 1.5rem;
             font-size: 1.6rem;
+          }
+
+          .errorMessage {
+            margin: 0.3rem 1.8rem 0;
+            font-size: 1.4rem;
           }
         }
       `}</style>

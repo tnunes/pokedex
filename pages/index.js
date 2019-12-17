@@ -1,28 +1,15 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
 
+import usePokemonsListing from '../hooks/usePokemonsListing';
+
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
 import PokemonsGrid from '../components/PokemonsGrid';
 
 import { gteMedium } from '../theme/medias';
 
 const Home = () => {
-  const [pokemons, setPokemons] = useState([]);
-
-  useEffect(() => {
-    async function fetchPokemons() {
-      const response = await fetch(
-        'https://pokeapi.co/api/v2/pokemon/'
-      ).then(res => res.json());
-
-      console.log(
-        `🚀 Found ${response.count} pokemons. Rendering ${response.results.length}`
-      );
-
-      setPokemons(response.results);
-    }
-
-    fetchPokemons();
-  }, []);
+  const { pokemons, isLoading, error } = usePokemonsListing();
 
   return (
     <div>
@@ -31,18 +18,26 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <PokemonsGrid pokemons={pokemons} />
+      {error ? (
+        <ErrorMessage message={error.message} />
+      ) : isLoading || pokemons.length === 0 ? (
+        <LoadingSpinner />
+      ) : (
+        <PokemonsGrid pokemons={pokemons} />
+      )}
 
       <style jsx>{`
         div {
+          margin: 0 1.5rem;
           padding: 4rem 0;
           display: flex;
           flex-direction: column;
-          align-content: center;
+          align-items: center;
         }
 
         @media (${gteMedium}) {
           div {
+            margin: 0 4rem;
             padding: 6rem 0;
           }
         }
