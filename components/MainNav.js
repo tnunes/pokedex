@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { gteLarge } from '../theme/medias';
+import { gteMedium } from '../theme/medias';
 
 const MainNav = () => {
   const { route } = useRouter();
@@ -58,7 +58,7 @@ const MainNav = () => {
           color: var(--white);
         }
 
-        @media (${gteLarge}) {
+        @media (${gteMedium}) {
           ul {
             margin-left: 3.2rem;
           }

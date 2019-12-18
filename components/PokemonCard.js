@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 import { gteMedium } from '../theme/medias';
 import pokemonTypeColor from '../theme/pokemonTypeColor';
 import usePokemonDetails from '../hooks/usePokemonDetails';
+import useFavourites from '../hooks/useFavourites';
 
 import FavouriteButton from './FavouriteButton';
 import CardSkeleton from './CardSkeleton';
@@ -92,6 +93,21 @@ const PokemonCard = ({ pokemon }) => {
     isLoading,
     error
   } = usePokemonDetails(pokemon.name, { doNotFetch: pokemon.isSkeleton });
+
+  const {
+    isAvailable: isFavouritesFeatureAvailable,
+    add: addFavourite,
+    remove: removeFavourite,
+    isFavourite
+  } = useFavourites();
+  const handleFavouriteToggle = useCallback(() => {
+    const toggleFavourite = isFavourite(pokemon.name)
+      ? removeFavourite
+      : addFavourite;
+
+    toggleFavourite(pokemon.name);
+  }, [addFavourite, isFavourite, pokemon.name, removeFavourite]);
+
   const [hasImageLoadingError, setHasImageLoadingError] = useState(false);
 
   const { name, id, types } = pokemonDetails || {};
@@ -126,7 +142,13 @@ const PokemonCard = ({ pokemon }) => {
               />
             </div>
           )}
-          <FavouriteButton className="favouriteButton" />
+          {isFavouritesFeatureAvailable() && (
+            <FavouriteButton
+              className="favouriteButton"
+              filled={isFavourite(pokemon.name)}
+              onClick={handleFavouriteToggle}
+            />
+          )}
           <div className="pokemonIdentication">
             <h2 className="pokemonName">{name}</h2>
             <span className="pokemonNumber">#{number}</span>

@@ -1,7 +1,7 @@
-import Head from 'next/head';
-
 import usePokemonsListing from '../hooks/usePokemonsListing';
+import { makeSkeletons } from '../services/skeletons';
 
+import MainLayout from '../components/MainLayout';
 import ErrorMessage from '../components/ErrorMessage';
 import PokemonsGrid from '../components/PokemonsGrid';
 import Button from '../components/Button';
@@ -9,12 +9,6 @@ import Button from '../components/Button';
 import { gteMedium } from '../theme/medias';
 
 const PAGE_SIZE = 24;
-
-const makeSkeletons = (length = PAGE_SIZE) =>
-  Array.from({ length }, (x, n) => ({
-    name: `skeleton ${n}`,
-    isSkeleton: true
-  }));
 
 const Home = () => {
   const {
@@ -29,21 +23,18 @@ const Home = () => {
   });
 
   return (
-    <div>
-      <Head>
-        <title>Pokédex</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+    <MainLayout title="Pokédex — Explorer">
       {error ? (
         <ErrorMessage message={error.message} />
       ) : isLoading || pokemons.length === 0 ? (
-        <PokemonsGrid pokemons={makeSkeletons()} />
+        <PokemonsGrid pokemons={makeSkeletons(PAGE_SIZE)} />
       ) : (
         <>
           <PokemonsGrid
             pokemons={
-              isLoadingNext ? [...pokemons, ...makeSkeletons()] : pokemons
+              isLoadingNext
+                ? [...pokemons, ...makeSkeletons(PAGE_SIZE)]
+                : pokemons
             }
           />
           {!isLoadingNext && loadNext && (
@@ -56,30 +47,17 @@ const Home = () => {
       )}
 
       <style jsx>{`
-        div {
-          margin: 0 1.5rem;
-          padding: 4rem 0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        div > :global(.loadMoreButton) {
+        :global(.loadMoreButton) {
           margin: 4rem 0 2rem;
         }
 
         @media (${gteMedium}) {
-          div {
-            margin: 0 4rem;
-            padding: 6rem 0;
-          }
-
-          div > :global(.loadMoreButton) {
+          :global(.loadMoreButton) {
             margin: 6rem 0 2rem;
           }
         }
       `}</style>
-    </div>
+    </MainLayout>
   );
 };
 

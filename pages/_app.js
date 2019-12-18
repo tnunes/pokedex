@@ -2,6 +2,8 @@ import App from 'next/app';
 import normalizeStyles from 'normalize.css?type=global';
 import Head from 'next/head';
 
+import { FavouritesProvider } from '../hooks/useFavourites';
+
 import Header from '../components/Header';
 
 class MyApp extends App {
@@ -88,7 +90,9 @@ class MyApp extends App {
         `}</style>
 
         <Header />
-        <Component {...pageProps} />
+        <FavouritesProvider>
+          <Component {...pageProps} />
+        </FavouritesProvider>
       </>
     );
   }
