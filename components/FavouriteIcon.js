@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { gteMedium } from '../theme/medias';
 
 const FavouriteIcon = ({ filled, ...props }) => (
-  <svg viewBox="0 0 14 11" {...props}>
+  <svg role="img" viewBox="0 0 14 11" {...props}>
+    <title>Favourite Heart</title>
     <path
       fill={filled ? '#0C6B58' : 'transparent'}
       stroke="#0C6B58"

@@ -1,5 +1,6 @@
 const ExclamationIcon = props => (
-  <svg width={24} height={24} {...props}>
+  <svg role="img" width={24} height={24} {...props}>
+    <title>Attention</title>
     <path fill="#FACDCD" d="M12 2a10 10 0 110 20 10 10 0 010-20z" />
     <path
       fill="#BA2525"

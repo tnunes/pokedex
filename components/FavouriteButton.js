@@ -5,7 +5,14 @@ import { gteMedium } from '../theme/medias';
 import FavouriteIcon from './FavouriteIcon';
 
 const FavouriteButton = ({ filled, className, onClick }) => (
-  <button type="button" className={className} onClick={onClick}>
+  <button
+    type="button"
+    aria-label={
+      filled ? 'Remove pokemon from favourites' : 'Add pokemon to favourites'
+    }
+    className={className}
+    onClick={onClick}
+  >
     <FavouriteIcon filled={filled} />
     <style jsx>{`
       button {

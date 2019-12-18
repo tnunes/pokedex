@@ -7,8 +7,18 @@ const MainLayout = ({ title, children }) => (
   <div>
     <Head>
       <title>{title}</title>
+      <meta
+        name="description"
+        content="A pokedex featuring all known pokemon species"
+      />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover"
+      />
       <link rel="icon" href="/favicon.ico" />
     </Head>
+
+    <h1 className="seoAndScreenReaderOnly">{title}</h1>
 
     {children}
 
@@ -19,6 +29,14 @@ const MainLayout = ({ title, children }) => (
         display: flex;
         flex-direction: column;
         align-items: center;
+      }
+
+      .seoAndScreenReaderOnly {
+        position: absolute;
+        width: 0.1rem;
+        height: 0.1rem;
+        overflow: hidden;
+        clip: rect(0.1rem, 0.1rem, 0.1rem, 0.1rem);
       }
 
       @media (${gteMedium}) {

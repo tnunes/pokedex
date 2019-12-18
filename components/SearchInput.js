@@ -4,7 +4,11 @@ import SearchIcon from './SearchIcon';
 
 const SearchInput = ({ className }) => (
   <div className={className}>
-    <input name="search" placeholder="Search by name or number" />
+    <input
+      name="search"
+      aria-label="Search pokemons by name or number"
+      placeholder="Search by name or number"
+    />
     <SearchIcon className="searchIcon" />
 
     <style jsx>{`
